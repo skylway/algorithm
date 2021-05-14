@@ -29,28 +29,48 @@ func (n *Node) SetNext(t *Node) {
 }
 
 
-func AddNode(n1, n2 *Node) (n3 *Node) {
-	addition := 0
+func AddNode(l1, l2 *Node) (l3 *Node) {
+
 	var self *Node
-	for ;n1 != nil || n2 != nil || addition != 0; n1, n2 = n1.next, n2.next {
-		v := n1.val + n2.val + addition
+	n1, n2, addition := 0, 0, 0
+
+	for l1 != nil || l2 != nil || addition != 0 {
+
+		if l1 == nil {
+			n1 = 0
+		} else {
+			n1 = l1.val
+			l1 = l1.next 
+		}
+
+		if l2 == nil {
+			n2 = 0
+		} else {
+			n2 = l2.val
+			l2 = l2.next 
+		}
+		
+		v := n1 + n2 + addition
+		
 		if v >= 10 {
-			v = 10 - v
+			v = v % 10
 			addition = 1
 		} else {
 			addition = 0
 		}
-		tmp := new(Node)
-		tmp.SetVal(v)
+		
+		tmp := &Node{val: v}
+		// tmp := new(Node)
+		// tmp.SetVal(v)
 		fmt.Printf("%v %p\n", tmp, &tmp)
 		
-		if n3 == nil {
-			n3 = tmp
+		if l3 == nil {
+			l3 = tmp
 		} else {
 			self.SetNext(tmp)
 		}
 		self = tmp
-		fmt.Printf("%v %p\n", n3, &n3)
+		fmt.Printf("%v %p\n", l3, &l3)
 	}
 
 	return
@@ -68,7 +88,7 @@ func main() {
 	l3.SetVal(3)
 	l4.SetVal(5)
 	l5.SetVal(6)
-	l6.SetVal(4)
+	l6.SetVal(5)
 
 	l1.SetNext(l2)
 	l2.SetNext(l3)
