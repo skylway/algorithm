@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -115,6 +116,35 @@ func main() {
 	fmt.Println(s)
 	ta := ``
 	fmt.Println(len(ta))
+	test := 16132 % 64
+	fmt.Println(test)
+	var musicStatus uint32
+	status := "1"
+	ttt, err := strconv.ParseUint(status, 0, 32)
+	musicStatus = uint32(ttt)
+	fmt.Println(musicStatus)
+	switch status {
+	case "0":
+		fmt.Println(0)
+	case "1":
+		fmt.Println(1)
+		fmt.Println(111111)
+	case "2":
+		fmt.Println(2)
+	}
+
+	type testStruct struct {
+		Musint string
+		Id  int
+	}
+	data := make(map[int]*testStruct)
+	// data = map[int]string {
+	// 	1: "1",
+	// 	2: "2",
+	// }
+	data[3] = &testStruct{Musint: "test1", Id: 3}
+
+	fmt.Println(data[2])
 }
 
 //删除函数
