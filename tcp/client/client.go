@@ -18,7 +18,7 @@ func main() {
 }
 
 func establishConn(i int) net.Conn {
-	conn, err := net.Dial("tcp", ":8888")
+	conn, err := net.Dial("tcp", ":4000")
 	if err != nil {
 		log.Printf("%d: dial error: %s", i, err)
 		return nil

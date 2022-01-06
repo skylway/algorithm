@@ -4,11 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"runtime"
 	"strconv"
-	"sync"
 	"time"
-	"unsafe"
 )
 
 // func main() {
@@ -141,32 +138,76 @@ func main() {
 		Musint string
 		Id  int
 	}
-	data := make(map[int]*testStruct)
+	t2 := &testStruct{}
+	t1 := new(testStruct)
+	t1 = nil
+	fmt.Println(t1, t2)
+	if t1 == nil {
+		fmt.Println("true")
+	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < 100; i++ {
+		// str := fmt.Sprintf("%09v", r.Int31n(1000000000))
+		// clientId, _ := strconv.ParseInt(str, 10, 64)
+		// fmt.Println(str)
+		// fmt.Println(clientId)
+		
+		// if clientId < 100000000 {
+		// 	clientId *= 100000000
+		// }
+		// fmt.Println(len(clientId))
+		id := r.Int31n(1000000000)
+		fmt.Println(id)
+		idStr := strconv.Itoa(int(id))
+		l := len(idStr)
+		switch l {
+		case 8:
+			idStr += "0"
+		case 7:
+			idStr += "00"
+		case 6:
+			idStr += "000"
+		case 5:
+			idStr += "0000"
+		case 4:
+			idStr += "00000"
+		case 3:
+			idStr += "000000"
+		case 2:
+			idStr += "0000000"
+		case 1:
+			idStr += "0000000"
+		}		
+		clientId, _ := strconv.ParseInt(idStr, 10, 64)
+		fmt.Println(clientId)
+	}
+
+	// data := make(map[int]*testStruct)
 	// data = map[int]string {
 	// 	1: "1",
 	// 	2: "2",
 	// }
-	data[3] = &testStruct{Musint: "test1", Id: 3}
+	// data[3] = &testStruct{Musint: "test1", Id: 3}
 
-	fmt.Println(data[2])
-	overflow(2147483647)
-	a := 10
-	b := &a
-	fmt.Printf("a:%d ptr:%p\n", a, &a)
-	fmt.Printf("b:%d type:%T ptr1: %p ptr2 %p\n", *b,b,b,&b)
-	// var test sync.Map
-	f := testFunc()
-	f()
-	tmp1 := add(10)
-	fmt.Println(tmp1(1), tmp1(2))
-	tmp2 := add(100)
-	fmt.Println(tmp2(1), tmp2(2))
-	testDefer()
-	testFoo(2, 0)
-	list := [6]int{1,2,3,4,5,6}
-	slice := list[:]
-	slice2 := slice
-	fmt.Println(slice, unsafe.Pointer(&slice), slice2, unsafe.Pointer(&slice2), list)
+	// fmt.Println(data[2])
+	// overflow(2147483647)
+	// a := 10
+	// b := &a
+	// fmt.Printf("a:%d ptr:%p\n", a, &a)
+	// fmt.Printf("b:%d type:%T ptr1: %p ptr2 %p\n", *b,b,b,&b)
+	// // var test sync.Map
+	// f := testFunc()
+	// f()
+	// tmp1 := add(10)
+	// fmt.Println(tmp1(1), tmp1(2))
+	// tmp2 := add(100)
+	// fmt.Println(tmp2(1), tmp2(2))
+	// testDefer()
+	// testFoo(2, 0)
+	// list := [6]int{1,2,3,4,5,6}
+	// slice := list[:]
+	// slice2 := slice
+	// fmt.Println(slice, unsafe.Pointer(&slice), slice2, unsafe.Pointer(&slice2), list)
 	// type Student struct {
 	// 	name string
 	// }
@@ -183,22 +224,27 @@ func main() {
 	// 	return n + "func4"
 	// })
 	// fmt.Println(ret)
-	runtime.GOMAXPROCS(1)
-	wg := sync.WaitGroup{}
-	wg.Add(10)
-	for i := 0; i < 10; i++ {
-		go func() {
-			fmt.Println("i: ", i)
-			wg.Done()
-		}()
-	}
+	// runtime.GOMAXPROCS(1)
+	// wg := sync.WaitGroup{}
+	// wg.Add(10)
+	// for i := 0; i < 10; i++ {
+	// 	go func() {
+	// 		fmt.Println("i: ", i)
+	// 		wg.Done()
+	// 	}()
+	// }
 	// for i := 0; i < 10; i++ {
 	// 	go func(i int) {
 	// 		fmt.Println("i: ", i)
 	// 		wg.Done()
 	// 	}(i)
 	// }
-	wg.Wait()
+	// wg.Wait()
+
+	strin := ""
+	fmt.Println(len(strin))
+	// testTime()
+	
 }
 
 //删除函数
@@ -281,4 +327,34 @@ func exec(name string, vs ...query) string {
 		go fn(i)
 	}
 	return <-ch
+}
+
+var (
+	// CurrUnixTime is current unix time
+	CurrUnixTime int64
+	CurrDateTime string
+	CurrDateHour string
+	CurrDateDay  string
+)
+
+func testTime() {
+	now := time.Now()
+	CurrUnixTime = now.Unix()
+	CurrDateTime = now.Format("2006-01-02 15:04:05")
+	CurrDateHour = now.Format("2006010215")
+	CurrDateDay = now.Format("20060102")
+	go func() {
+		tm := time.NewTimer(time.Second)
+		for {
+			now := time.Now()
+			d := time.Second - time.Duration(now.Nanosecond())
+			tm.Reset(d)
+			<-tm.C
+			now = time.Now()
+			CurrUnixTime = now.Unix()
+			CurrDateTime = now.Format("2006-01-02 15:04:05")
+			CurrDateHour = now.Format("2006010215")
+			CurrDateDay = now.Format("20060102")
+		}
+	}()
 }
